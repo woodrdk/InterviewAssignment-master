@@ -1,0 +1,205 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Classes";
+}
+
+<div>
+    <h1 class="display-4 text-center">Hello - your results should show beneath this header and instruction set:</h1>
+    <ul>
+        <li>There is a <strong>build error</strong> in the supplied code. Correct the bug and ensure the project builds.</li>
+        <li>There is a <strong>runtime error</strong> in the supplied code. Run the project, evaluate the stack error, and correct the bug.</li>
+        <li>
+            The supplied CSV should populate a list of classes in the index page. We want you to display the classes on the index page, following these rules and using the supplied bootstrap CSS wherever possible:
+            <ul>
+                <li>Each class should be displayed in a table like the one at the bottom</li>
+                <li>There should be one table per distinct <strong>quarter code</strong>, where quarter code is the last 4 characters of <strong>ClassID</strong>. All classes with that quarter code should go in that table, and put an h2 above each labelling which quarter code it contains.</li>
+                <li>Order these tables on the page by their quarter code, <strong>descending</strong></li>
+                <li>The classes inside each table should be ordered by <strong>CourseID</strong>, <strong>ascending</strong></li>
+                <li><strong>Item Number</strong> should be the first four characters of <strong>ClassID</strong></li>
+                <li><strong>Credits </strong>should display as a decimal in xx.x format. The values that are imported are from a legacy system; you will need to move the decimal point left 1 place on the whole numbers. For example, <strong>50 </strong>should display as <strong>5.0</strong>.</li>
+                <li>
+                    Convert the <strong>Modality </strong>supplied to a Modality display string by updating the get function for the <strong>DisplayModality </strong>property in the model, using this data:
+                    <ul>
+                        <li>
+                            <table style="border-collapse: collapse; width: 32.3106%; height: 186px;" border="1">
+                                <tbody>
+                                    <tr>
+                                        <td style="width: 48.3179%;">Modality</td>
+                                        <td style="width: 48.3179%;">DisplayModality</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 48.3179%;">80</td>
+                                        <td style="width: 48.3179%;">Hybrid</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 48.3179%;">50</td>
+                                        <td style="width: 48.3179%;">Virtual</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 48.3179%;">51</td>
+                                        <td style="width: 48.3179%;">Virtual Hybrid</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 48.3179%;">3C</td>
+                                        <td style="width: 48.3179%;">Online</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="width: 48.3179%;">[else]</td>
+                                        <td style="width: 48.3179%;">Face to Face</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    The <strong>Status </strong>field should display the following:
+                    <ul>
+                        <li>If <strong>SectionStatusID1 </strong>is an 'X', show <strong>Cancelled</strong>, and make the whole row for that class <strong>red</strong></li>
+                        <li>
+                            If the number of <strong>StudentsEnrolled </strong>is greater than or equal to the <strong>ClassCapacity</strong>, show <strong>Closed</strong>, and make the whole row for that class <strong>yellow</strong>
+                            <ul>
+                                <li>Otherwise, show <strong>Open - [number of seats remaining]</strong>, and make the whole row for that class <strong>green</strong></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <table style="border-collapse: collapse; width: 100%;" border="1">
+        <tbody>
+            <tr>
+                <td style="width: 12.8011%;">Item Number</td>
+                <td style="width: 12.8011%;">Course ID</td>
+                <td style="width: 12.9025%;">Course Title</td>
+                <td style="width: 12.9025%;">Credits</td>
+                <td style="width: 12.9025%;">Days</td>
+                <td style="width: 12.9025%;">Modality</td>
+                <td style="width: 12.9025%;">Status</td>
+            </tr>
+            <tr>
+                <td style="width: 12.8011%;">&nbsp;</td>
+                <td style="width: 12.8011%;">&nbsp;</td>
+                <td style="width: 12.9025%;">&nbsp;</td>
+                <td style="width: 12.9025%;">&nbsp;</td>
+                <td style="width: 12.9025%;">&nbsp;</td>
+                <td style="width: 12.9025%;">&nbsp;</td>
+                <td style="width: 12.9025%;">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr />
+
+    <p>Your code starts here!</p>
+
+    @{ 
+        // makes list to keep track of the quarters of classes that are in the file 
+        List<string> Qtrs = new List<string>();
+
+        // checks each class to see what quarter it is in and if the qtr is in the Qtrs list already
+        // if it is not in the list it then adds it
+        foreach (var item in Model._classes)
+        {
+            var qtr = item.ClassID.Substring(4); // pulls Qtr info from classID
+            if (!Qtrs.Contains(qtr))
+            {
+                Qtrs.Add(qtr);
+            }
+        }
+        Qtrs.Sort(); // sorts the qtrs list 
+        // loop to print out the quarters tables
+        for (int i = Qtrs.Count()-1; i >= 0; i--)
+        {
+            <h2>Quarter @Qtrs[i]</h2>
+            <table class="" style="border-collapse: collapse; width: 100%;" border="1"> <!-- styled to match example table-->
+                <thead>
+                    <tr>
+                        <th>
+                            Item Number
+                        </th>
+                        <th>
+                            Course ID
+                        </th>
+                        <th>
+                            Course Title
+                        </th>
+                        <th>
+                            Credits
+                        </th>
+                        <th>
+                            Days
+                        </th>
+                        <th>
+                            Modality
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var classItem in Model._classes)
+                    {
+
+                        var itemNumber = classItem.ClassID.Substring(0, 4); // this truncates the class id to the item number
+                        if(classItem.ClassID.Substring(4) == @Qtrs[i]) // checks if the class is in the current quarter table being made
+                        {
+                            var credits = String.Format("{0:0.0}", classItem.Credits * .1); // displays all ints as a XX.X format
+                            
+                            var status = ""; // gives class status
+                            var statusColor = ""; // determines row color based on status
+                            if (classItem.SectionStatusID == "X")
+                            {
+                                status = "Cancelled";
+                                statusColor = "bg-danger";
+                            }
+                            else
+                            {
+                                if (classItem.StudentsEnrolled >= classItem.ClassCapacity) // checks if class is full
+                                {
+                                    status = "Closed";
+                                    statusColor = "bg-warning";
+                                }
+                                else
+                                {
+                                    var open = classItem.ClassCapacity - classItem.StudentsEnrolled; // gets how many seats are remaining open
+                                    status = "Open - " + open + " seats remaining";
+                                    statusColor = "bg-success";
+                                }
+                            }
+
+                            <tr class=@statusColor>
+                                <td>
+                                    @itemNumber
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => classItem.CourseID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => classItem.CourseTitle)
+                                </td>
+                                <td>
+                                    @credits
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => classItem.DayID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => classItem.DisplayModality)
+                                </td>
+
+                                <td>
+                                    @status
+                                </td>
+                             </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+            }
+        }
+</div>
+
