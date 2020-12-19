@@ -19,8 +19,8 @@ namespace InterviewAssignment.Models
         
         // updated get function to display modality string
         public string DisplayModality  { get {
-                string witch = Modality;
-                switch (witch)
+                string which = Modality;
+                switch (which)
                 {
                     case "80":
                         return "Hybrid";
